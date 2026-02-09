@@ -7,5 +7,6 @@ func New(repo *contract.Repository) *contract.Service {
 	return &contract.Service{
 		Room:      roomSvc,
 		Signaling: NewSignalingService(roomSvc),
+		Auth:      NewAuthService(repo),
 	}
 }

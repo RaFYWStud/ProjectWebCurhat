@@ -1,9 +1,14 @@
 package repository
 
-import "projectwebcurhat/contract"
+import (
+	"projectwebcurhat/contract"
 
-func New() *contract.Repository {
+	"gorm.io/gorm"
+)
+
+func New(db *gorm.DB) *contract.Repository {
 	return &contract.Repository{
 		Room: NewRoomRepository(),
+		User: NewUserRepository(db),
 	}
 }

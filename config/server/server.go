@@ -7,12 +7,15 @@ import (
 	"time"
 
 	"projectwebcurhat/config"
+	dbConfig "projectwebcurhat/config/database"
 	"projectwebcurhat/config/middleware"
 	"projectwebcurhat/controller"
+	dbMigration "projectwebcurhat/database"
 	"projectwebcurhat/repository"
 	"projectwebcurhat/service"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func Run() {
@@ -24,11 +27,24 @@ func Run() {
 		return
 	}
 
-	startServer(cfg)
+	// Connect to database
+	db, _, err := dbConfig.ConnectDB()
+	if err != nil {
+		log.Fatal("Failed to connect to the database:", err)
+		return
+	}
+
+	// Run migrations
+	if err := dbMigration.RunMigration(db); err != nil {
+		log.Fatal("Failed to run migrations:", err)
+		return
+	}
+
+	startServer(cfg, db)
 }
 
-func startServer(cfg *config.AppConfig) {
-	repo := repository.New()
+func startServer(cfg *config.AppConfig, db *gorm.DB) {
+	repo := repository.New(db)
 	serv := service.New(repo)
 
 	if cfg.IsProduction {

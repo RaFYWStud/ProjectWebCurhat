@@ -22,6 +22,7 @@ func New(app *gin.Engine, service *contract.Service) {
 	allController := []Controller{
 		&HealthController{},
 		&WebSocketController{},
+		&AuthController{},
 	}
 
 	for _, c := range allController {

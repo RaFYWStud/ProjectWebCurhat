@@ -2,9 +2,25 @@ package database
 
 import (
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
+
+// ==================== Database Models (PostgreSQL) ====================
+
+// User represents a registered user in the system
+type User struct {
+	ID        int       `gorm:"column:id;primaryKey;autoIncrement;not null;<-:create" json:"id"`
+	Username  string    `gorm:"column:username;uniqueIndex;not null" json:"username"`
+	Email     string    `gorm:"column:email;uniqueIndex;not null" json:"email"`
+	Password  string    `gorm:"column:password;not null" json:"-"`
+	IsOnline  bool      `gorm:"column:is_online;default:false" json:"is_online"`
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
+}
+
+// ==================== In-Memory Models (WebSocket/WebRTC) ====================
 
 // Client represents a connected WebSocket client
 type Client struct {
