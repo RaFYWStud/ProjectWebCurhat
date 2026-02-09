@@ -3,17 +3,21 @@
 ## 1. Setup Project
 
 ### Install Go
+
 Pastikan Go versi 1.21+ sudah terinstall:
+
 ```bash
 go version
 ```
 
 ### Clone/Navigate ke Project
+
 ```bash
 cd c:\Project-projectan\ProjectWebCurhat
 ```
 
 ### Download Dependencies
+
 ```bash
 go mod download
 ```
@@ -21,6 +25,7 @@ go mod download
 ## 2. Running the Server
 
 ### Development Mode
+
 ```bash
 go run main.go
 ```
@@ -28,6 +33,7 @@ go run main.go
 Server akan running di `http://localhost:8080`
 
 ### Production Build
+
 ```bash
 # Build executable
 go build -o bin/server.exe .
@@ -37,6 +43,7 @@ go build -o bin/server.exe .
 ```
 
 ### Custom Port
+
 ```bash
 # Windows PowerShell
 $env:PORT="3000"
@@ -52,18 +59,19 @@ go run main.go
 ### Method 1: Menggunakan Test Client HTML
 
 1. **Start server**:
-   ```bash
-   go run main.go
-   ```
+
+    ```bash
+    go run main.go
+    ```
 
 2. **Buka test client**:
-   - Buka `test-client.html` di browser Chrome/Firefox
-   - Buka tab baru dan buka `test-client.html` lagi (2 tabs)
+    - Buka `test-client.html` di browser Chrome/Firefox
+    - Buka tab baru dan buka `test-client.html` lagi (2 tabs)
 
 3. **Test video call**:
-   - Tab 1: Enter username "User1", klik "Connect"
-   - Tab 2: Enter username "User2", klik "Connect"
-   - Video call akan otomatis terkoneksi
+    - Tab 1: Enter username "User1", klik "Connect"
+    - Tab 2: Enter username "User2", klik "Connect"
+    - Video call akan otomatis terkoneksi
 
 ### Method 2: Menggunakan 2 Browser Berbeda
 
@@ -75,40 +83,46 @@ go run main.go
 ### Method 3: Test di 2 Device Berbeda
 
 1. **Start server dengan bind ke semua interface**:
-   ```go
-   // Tidak perlu ubah apa-apa, sudah default bind ke 0.0.0.0
-   ```
+
+    ```go
+    // Tidak perlu ubah apa-apa, sudah default bind ke 0.0.0.0
+    ```
 
 2. **Cari IP address komputer**:
-   ```bash
-   ipconfig
-   # Cari IPv4 Address misalnya: 192.168.1.100
-   ```
+
+    ```bash
+    ipconfig
+    # Cari IPv4 Address misalnya: 192.168.1.100
+    ```
 
 3. **Update WS_URL di test-client.html**:
-   ```javascript
-   const WS_URL = 'ws://192.168.1.100:8080/ws';
-   ```
+
+    ```javascript
+    const WS_URL = "ws://192.168.1.100:8080/ws";
+    ```
 
 4. **Buka di 2 device berbeda**:
-   - Device 1: Buka `http://192.168.1.100:8080/test-client.html`
-   - Device 2: Buka `http://192.168.1.100:8080/test-client.html`
+    - Device 1: Buka `http://192.168.1.100:8080/test-client.html`
+    - Device 2: Buka `http://192.168.1.100:8080/test-client.html`
 
 ## 4. API Testing dengan WebSocket Client
 
 ### Menggunakan wscat (WebSocket CLI)
 
 Install wscat:
+
 ```bash
 npm install -g wscat
 ```
 
 Connect ke server:
+
 ```bash
 wscat -c "ws://localhost:8080/ws?username=TestUser"
 ```
 
 Send messages:
+
 ```json
 # Join room
 {"type":"join","username":"TestUser1"}
@@ -120,6 +134,7 @@ Send messages:
 ## 5. Health Check
 
 Test server status:
+
 ```bash
 # PowerShell
 Invoke-WebRequest http://localhost:8080/health
@@ -129,13 +144,14 @@ http://localhost:8080/health
 ```
 
 Response:
+
 ```json
 {
-  "success": true,
-  "message": "Server is running",
-  "data": {
-    "status": "healthy"
-  }
+    "success": true,
+    "message": "Server is running",
+    "data": {
+        "status": "healthy"
+    }
 }
 ```
 
@@ -156,26 +172,34 @@ Saat running, server akan menampilkan logs:
 ## 7. Common Issues & Solutions
 
 ### Issue: "bind: address already in use"
+
 **Solution**: Port 8080 sudah dipakai, ganti port:
+
 ```bash
 $env:PORT="3001"
 go run main.go
 ```
 
 ### Issue: Camera/Mic tidak terdeteksi di test client
-**Solution**: 
+
+**Solution**:
+
 - Pastikan browser punya permission untuk camera/mic
 - Buka di `https://` atau `localhost` (not `file://`)
 - Coba browser lain
 
 ### Issue: Video tidak muncul tapi connected
+
 **Solution**:
+
 - Check browser console untuk error
 - Pastikan kedua client sudah allow camera/mic
 - Check firewall settings
 
 ### Issue: Koneksi terputus terus
+
 **Solution**:
+
 - Check STUN server masih accessible
 - Pastikan tidak ada proxy/firewall blocking WebSocket
 - Try different STUN servers di test-client.html
@@ -185,11 +209,13 @@ go run main.go
 ### Hot Reload (Auto Restart on File Change)
 
 Install air:
+
 ```bash
 go install github.com/cosmtrek/air@latest
 ```
 
 Create `.air.toml`:
+
 ```toml
 root = "."
 tmp_dir = "tmp"
@@ -202,6 +228,7 @@ tmp_dir = "tmp"
 ```
 
 Run with air:
+
 ```bash
 air
 ```
@@ -209,6 +236,7 @@ air
 ### Debugging
 
 Tambahkan debug logs di code:
+
 ```go
 import "log"
 
@@ -230,6 +258,7 @@ curl http://localhost:8080/
 ### Using systemd (Linux)
 
 Create service file `/etc/systemd/system/webcurhat.service`:
+
 ```ini
 [Unit]
 Description=WebRTC Signaling Server
@@ -248,6 +277,7 @@ WantedBy=multi-user.target
 ```
 
 Enable and start:
+
 ```bash
 sudo systemctl enable webcurhat
 sudo systemctl start webcurhat
@@ -256,6 +286,7 @@ sudo systemctl start webcurhat
 ### Using Docker
 
 Create `Dockerfile`:
+
 ```dockerfile
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
@@ -272,6 +303,7 @@ CMD ["./server"]
 ```
 
 Build and run:
+
 ```bash
 docker build -t webcurhat .
 docker run -p 8080:8080 webcurhat
@@ -280,10 +312,12 @@ docker run -p 8080:8080 webcurhat
 ### Using Windows Service
 
 Gunakan tools seperti:
+
 - NSSM (Non-Sucking Service Manager)
 - WinSW
 
 Example dengan NSSM:
+
 ```bash
 nssm install WebCurhat "C:\path\to\server.exe"
 nssm start WebCurhat
@@ -309,6 +343,7 @@ nssm start WebCurhat
 ## Need Help?
 
 Check:
+
 1. [README.md](README.md) - Overview dan fitur
 2. [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture
 3. Logs output - Server logs menampilkan detailed info

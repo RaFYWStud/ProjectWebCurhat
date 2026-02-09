@@ -30,27 +30,32 @@ ProjectWebCurhat/
 ## Penjelasan Layer
 
 ### 1. **Model Layer** (`internal/model/`)
-   - Berisi domain entities dan struktur data
-   - `Client`: Representasi WebSocket client
-   - `Room`: Representasi ruang chat untuk 2 peer
-   - `Message`: Struktur pesan signaling WebRTC
+
+- Berisi domain entities dan struktur data
+- `Client`: Representasi WebSocket client
+- `Room`: Representasi ruang chat untuk 2 peer
+- `Message`: Struktur pesan signaling WebRTC
 
 ### 2. **Service Layer** (`internal/service/`)
-   - Berisi business logic aplikasi
-   - `RoomService`: Mengelola room matching dan lifecycle
-   - `SignalingService`: Menangani WebRTC signaling (offer/answer/ICE)
+
+- Berisi business logic aplikasi
+- `RoomService`: Mengelola room matching dan lifecycle
+- `SignalingService`: Menangani WebRTC signaling (offer/answer/ICE)
 
 ### 3. **Handler Layer** (`internal/handler/`)
-   - Menangani HTTP/WebSocket requests
-   - `WebSocketHandler`: Handle koneksi WebSocket dan routing pesan
+
+- Menangani HTTP/WebSocket requests
+- `WebSocketHandler`: Handle koneksi WebSocket dan routing pesan
 
 ### 4. **Config Layer** (`config/`)
-   - Mengelola konfigurasi aplikasi
-   - Load dari environment variables
+
+- Mengelola konfigurasi aplikasi
+- Load dari environment variables
 
 ### 5. **Utilities** (`pkg/`)
-   - Helper functions yang reusable
-   - Response formatting
+
+- Helper functions yang reusable
+- Response formatting
 
 ## Cara Menjalankan
 
@@ -96,40 +101,44 @@ go run main.go
 ## Format Pesan
 
 ### Join Room
+
 ```json
 {
-  "type": "join",
-  "username": "User123"
+    "type": "join",
+    "username": "User123"
 }
 ```
 
 ### SDP Offer/Answer
+
 ```json
 {
-  "type": "offer",
-  "payload": {
     "type": "offer",
-    "sdp": "v=0\r\no=..."
-  }
+    "payload": {
+        "type": "offer",
+        "sdp": "v=0\r\no=..."
+    }
 }
 ```
 
 ### ICE Candidate
+
 ```json
 {
-  "type": "candidate",
-  "payload": {
-    "candidate": "candidate:...",
-    "sdpMid": "0",
-    "sdpMLineIndex": 0
-  }
+    "type": "candidate",
+    "payload": {
+        "candidate": "candidate:...",
+        "sdpMid": "0",
+        "sdpMLineIndex": 0
+    }
 }
 ```
 
 ### Leave Room
+
 ```json
 {
-  "type": "leave"
+    "type": "leave"
 }
 ```
 

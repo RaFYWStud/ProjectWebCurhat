@@ -4,11 +4,12 @@ import (
 	"log"
 	"net/http"
 
+	"projectwebcurhat/contract"
+	"projectwebcurhat/database"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"projectwebcurhat/contract"
-	"projectwebcurhat/database"
 )
 
 var upgrader = websocket.Upgrader{

@@ -3,8 +3,9 @@ package controller
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"projectwebcurhat/contract"
+
+	"github.com/gin-gonic/gin"
 )
 
 type HealthController struct {

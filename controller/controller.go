@@ -5,10 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"projectwebcurhat/config/middleware"
 	"projectwebcurhat/config/pkg/errs"
 	"projectwebcurhat/contract"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Controller interface {

@@ -45,15 +45,18 @@ pkg/
 ## Layer-Layer dalam Aplikasi
 
 ### 1. **Config Layer**
+
 **Lokasi**: `config/`
 
 **Tanggung jawab**:
+
 - Load konfigurasi dari environment variables
 - Setup server (Gin engine, middleware, routes)
 - CORS middleware
 - Structured error types
 
 **File**:
+
 - `config.go`: Singleton config dengan `Load()` dan `Get()`
 - `server/server.go`: Inisialisasi server, dependency injection, start HTTP server
 - `middleware/cors.go`: CORS middleware untuk Gin
@@ -62,70 +65,85 @@ pkg/
 ---
 
 ### 2. **Database Layer** (Domain Models)
+
 **Lokasi**: `database/`
 
 **Tanggung jawab**:
+
 - Mendefinisikan struktur data core (entities)
 - Pure Go structs dan methods
 - Tidak ada dependencies ke layer lain (selain library)
 
 **File**:
+
 - `models.go`: `Client`, `Room`, `MessageType` - entities utama aplikasi
 
 ---
 
 ### 3. **DTO Layer** (Data Transfer Objects)
+
 **Lokasi**: `dto/`
 
 **Tanggung jawab**:
+
 - Mendefinisikan format data yang dikirim/diterima via WebSocket
 - Memisahkan transport data dari domain models
 - JSON serialization tags
 
 **File**:
+
 - `websocket.go`: `Message`, `SDPMessage`, `ICECandidateMessage`, message type constants
 
 ---
 
 ### 4. **Contract Layer** (Interfaces)
+
 **Lokasi**: `contract/`
 
 **Tanggung jawab**:
+
 - Mendefinisikan interface untuk Repository dan Service
 - Menjadi "kontrak" yang harus dipenuhi oleh implementasi
 - Memungkinkan loose coupling antar layer
 
 **File**:
+
 - `repository.go`: `Repository` struct + `RoomRepository` interface
 - `service.go`: `Service` struct + `RoomService`, `SignalingService` interfaces
 
 ---
 
 ### 5. **Repository Layer** (Data Access)
+
 **Lokasi**: `repository/`
 
 **Tanggung jawab**:
+
 - Implementasi data access (in-memory room storage)
 - CRUD operations untuk Room
 - Mengelola waiting room state
 - Thread-safe dengan mutex
 
 **File**:
+
 - `repository.go`: Factory function `New()` → `*contract.Repository`
 - `room.go`: Implementasi `contract.RoomRepository`
 
 ---
 
 ### 6. **Service Layer** (Business Logic)
+
 **Lokasi**: `service/`
 
 **Tanggung jawab**:
+
 - Implementasi business logic
 - Room matching (find or create)
 - WebRTC signaling flow (join, leave, relay)
 - Menggunakan Repository untuk data access
 
 **File**:
+
 - `service.go`: Factory function `New(repo) → *contract.Service`
 - `room.go`: Implementasi `contract.RoomService`
 - `signaling.go`: Implementasi `contract.SignalingService`
@@ -133,15 +151,18 @@ pkg/
 ---
 
 ### 7. **Controller Layer** (Presentation)
+
 **Lokasi**: `controller/`
 
 **Tanggung jawab**:
+
 - Handle HTTP/WebSocket requests
 - Upgrade connections ke WebSocket
 - Memanggil Service layer untuk business logic
 - Setiap controller implements `Controller` interface
 
 **File**:
+
 - `controller.go`: `Controller` interface (`GetPrefix`, `InitService`, `InitRoute`) + factory `New()`
 - `health.go`: `HealthController` - endpoint `/health`
 - `websocket.go`: `WebSocketController` - endpoint `/ws`
@@ -216,12 +237,12 @@ Controller ──→ Contract(Service) ──→ Contract(Repository) ──→ 
 
 Dependencies only point inward. Database models must NOT import Service, Repository, or Controller.
 
-
 ### Menambah Database Layer
 
 Untuk menambah persistence (database):
 
 #### 1. Buat Repository Interface di Service Layer
+
 ```go
 // internal/service/room_repository.go
 type RoomRepository interface {
@@ -232,6 +253,7 @@ type RoomRepository interface {
 ```
 
 #### 2. Implement di Infrastructure Layer
+
 ```go
 // internal/repository/postgres_room_repository.go
 type PostgresRoomRepository struct {
@@ -244,6 +266,7 @@ func (r *PostgresRoomRepository) Save(room *model.Room) error {
 ```
 
 #### 3. Inject ke Service
+
 ```go
 // main.go
 db := connectDatabase()
@@ -263,20 +286,24 @@ roomService := service.NewRoomService(roomRepo)
 ## Testing Strategy
 
 ### Unit Tests
+
 - Test setiap layer independently
 - Mock dependencies
 
 ### Integration Tests
+
 - Test flow antar layer
 - Use test database jika ada
 
 ### E2E Tests
+
 - Test dari client ke server
 - Gunakan test client
 
 ## Kesimpulan
 
 Arsitektur berlayer ini membuat aplikasi:
+
 - ✅ Mudah di-maintain
 - ✅ Mudah di-test
 - ✅ Mudah di-scale

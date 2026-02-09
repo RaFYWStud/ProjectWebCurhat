@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"projectwebcurhat/config"
 	"projectwebcurhat/config/middleware"
 	"projectwebcurhat/controller"
 	"projectwebcurhat/repository"
 	"projectwebcurhat/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Run() {
